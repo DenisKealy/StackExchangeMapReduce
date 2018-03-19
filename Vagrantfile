@@ -54,13 +54,13 @@ Vagrant.configure("2") do |config|
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   #
-  # config.vm.provider "virtualbox" do |vb|
-  #   # Display the VirtualBox GUI when booting the machine
-  #   vb.gui = true
-  #
-  #   # Customize the amount of memory on the VM:
-  #   vb.memory = "1024"
-  # end
+  config.vm.provider "virtualbox" do |vb|
+    # Display the VirtualBox GUI when booting the machine
+    # vb.gui = true
+  
+    # Customize the amount of memory on the VM:
+    vb.memory = "2048"
+  end
   #
   # View the documentation for the provider you are using for more
   # information on available options.
@@ -101,6 +101,8 @@ Vagrant.configure("2") do |config|
       # Set JAVA_HOME Variable in Hadoop
       echo '\n\n export JAVA_HOME="/usr/lib/jvm/java-8-oracle/jre/"' >> /usr/local/hadoop/etc/hadoop/hadoop-env.sh
 
+      ### For multi node cluster - so nodes can communicate via ssh
+      ### Need to add key to each nodes authorized_keys file
       # Setup passphraseless ssh for localhost 
       # ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
       # cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
@@ -122,20 +124,26 @@ Vagrant.configure("2") do |config|
       mkdir /usr/lib/hive
       mv apache-hive-2.3.2-bin /usr/lib/hive/
 
-      # Add PIG_HOME to PATH
-      echo 'export PIG_HOME=/usr/lib/pig/pig-0.17.0' >> ~/.bashrc
-      echo 'export PATH=$PATH:$PIG_HOME/bin' >> ~/.bashrc
+      ### RUN THESE COMMANDS AFTER VM BOOTS UP (vagrant up)
 
-      # Add HIVE_HOME to PATH
-      echo 'export HIVE_HOME=/usr/lib/hive/apache-hive-2.3.2-bin' >> ~/.bashrc
-      echo 'export PATH=$PATH:$HIVE_HOME/bin' >> ~/.bashrc
+      # # Add PIG_HOME to PATH
+      # echo 'export PIG_HOME=/usr/lib/pig/pig-0.17.0' >> ~/.bashrc
+      # echo 'export PATH=$PATH:$PIG_HOME/bin' >> ~/.bashrc
 
-      # Add HADOOP_HOME Environmental variable for HIVE to work (ALTERNATIVE:/usr/local/hive/bin/hive-config.sh)
-      echo 'export HADOOP_HOME=/usr/local/hadoop' >> ~/.bashrc
+      # # Add HIVE_HOME to PATH
+      # echo 'export HIVE_HOME=/usr/lib/hive/apache-hive-2.3.2-bin' >> ~/.bashrc
+      # echo 'export PATH=$PATH:$HIVE_HOME/bin' >> ~/.bashrc
+
+      # # Add HADOOP_HOME Environmental variable for HIVE to work (ALTERNATIVE:/usr/local/hive/bin/hive-config.sh)
+      # echo 'export HADOOP_HOME=/usr/local/hadoop' >> ~/.bashrc
 
    SHELL
 
-  # Transfer smallest file over to VM filesystem 
+  # Copy files over to virtual filesystem 
   config.vm.provision "file", source: "/Users/admin/workspace/CA675/SEdata05-1491.csv", destination: "SEdata05-1491.csv"
+  config.vm.provision "file", source: "/Users/admin/workspace/CA675/SEdata04-49820.csv", destination: "SEdata04-49820.csv"
+  config.vm.provision "file", source: "/Users/admin/workspace/CA675/SEdata03-49436.csv", destination: "SEdata03-49436.csv"
+  config.vm.provision "file", source: "/Users/admin/workspace/CA675/SEdata02-49366.csv", destination: "SEdata02-49366.csv"
+  config.vm.provision "file", source: "/Users/admin/workspace/CA675/SEdata01-49950.csv", destination: "SEdata01-49950.csv"
 
 end
